@@ -1,5 +1,5 @@
-
-import {initialCards, createCard, deleteCard, addLike} from './components/cards.js';
+import {createCard, deleteCard, addLike} from './components/card.js';
+import {initialCards} from './components/cards.js';
 import {openModal, closeModal} from './components/modal.js';
 
 const addIcon = new URL('../images/add-icon.svg', import.meta.url);
