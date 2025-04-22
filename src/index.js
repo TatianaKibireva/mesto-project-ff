@@ -1,9 +1,4 @@
-import {
-  createCard,
-  deleteCard,
-  addLike,
-  clickImage,
-} from "./components/card.js";
+import { createCard, deleteCard, addLike } from "./components/card.js";
 import { initialCards } from "./components/cards.js";
 import { openModal, closeModal, closeOverlay } from "./components/modal.js";
 import "../pages/index.css";
@@ -36,6 +31,20 @@ editProfil.addEventListener("click", function () {
 addButton.addEventListener("click", function () {
   openModal(newСardPopup);
 });
+
+//функция открытия попапа с изображением
+function clickImage(evt) {
+  const imagePopup = document.querySelector(".popup__image");
+  const typeImagePopup = document.querySelector(".popup_type_image");
+
+  const imageSrc = evt.target.src;
+  const imageText = evt.target.alt;
+
+  imagePopup.src = imageSrc;
+  imagePopup.alt = imageText;
+
+  openModal(typeImagePopup);
+}
 
 const closeButton = document.querySelectorAll(".popup__close");
 closeButton.forEach(function (button) {
