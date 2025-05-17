@@ -1,0 +1,16 @@
+.profile__avatar-edit {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  cursor: pointer;
+  margin: 0 29px 0 0;
+}
+
+.profile__avatar-edit:hover .profile__image-overlay {
+  display: block;
+}
+
+.profile__avatar-edit:hover .profile__avatar-edit-button {
+  display: block;
+}
