@@ -1,10 +1,22 @@
-import { createCard, deleteCard } from './components/card.js';
+import { createCard, handleDeleteCard } from './components/card.js';
 import { openModal, closeModal, closeOverlay } from './components/modal.js';
 import { enableValidation, clearValidation } from './components/validation.js';
-import { loadInfoUser, loadCards, showError, updateInfoProfile, addCard, updateAvatar } from './components/api.js';
+import { loadInfoUser, loadCards, updateInfoProfile, addCard, updateAvatar } from './components/api.js';
 import '../pages/index.css';
 
-enableValidation();
+function showError() {
+  console.log('Не удалось загрузить данные');
+};
+
+const validationConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_inactive',
+  inputErrorClass: 'popup__input-error',
+  errorClass: 'popup__input-error_active'
+};
+enableValidation(validationConfig); 
 
 // Параллельно загружаем данные пользователя и карточки
 // После успешной загрузки обновляем профиль пользователя и отображаем карточки
@@ -24,7 +36,7 @@ Promise.all(promises)
 
     const cardList = document.querySelector('.places__list');
     cardsData.forEach((cardItem) => { // Берём каждую карточку из списка загруженных данных cardsData
-      const card = createCard(cardItem, userData._id, deleteCard, clickImage); //Создаём хтмл-элемент карточки с данными cardItem, айди пользователя(чтобы знать можем ли мы ее удалять), с функциями удаления и отображения картинок
+      const card = createCard(cardItem, userData._id, handleDeleteCard, clickImage); //Создаём хтмл-элемент карточки с данными cardItem, айди пользователя(чтобы знать можем ли мы ее удалять), с функциями удаления и отображения картинок
       cardList.append(card); // Добавляем картоку на страницу
     });
   })
@@ -48,19 +60,19 @@ editProfile.addEventListener('click', function () {
   nameInput.value = nameProfile; //Для отображения текущих имени и описания
   jobInput.value = descriptionProfile;
 
-  clearValidation(formProfileEdit);
+  clearValidation(formProfileEdit, validationConfig);
   openModal(editPopup);
 });
 
 // Открытие попапа добавления новой карточки
 addButton.addEventListener('click', function () {
-  clearValidation(formCards);
+  clearValidation(formCards, validationConfig);
   openModal(newCardPopup);
 });
 
 //Открытие попапа с редактированием аватара
 editButtonAvatar.addEventListener('click', function () {
-  clearValidation(formEditAvatar);
+  clearValidation(formEditAvatar, validationConfig);
   openModal(editPopupAvatar);
 });
 
@@ -83,13 +95,6 @@ const closeButton = document.querySelectorAll('.popup__close');
 closeButton.forEach(function (button) {
   button.addEventListener('click', function () {
     const listPopup = button.closest('.popup');
-
-    if (!listPopup.classList.contains('popup_type_image"')) {
-      const form = listPopup.querySelector('form');
-      if (form) {
-        clearValidation(form); // очистка валидации при закрытии у всех попапов, кроме попапа с изображением
-      }
-    }
     closeModal(listPopup);
   });
 });
@@ -154,14 +159,7 @@ formCards.addEventListener('submit', function (evt) {
 
   addCard(cardName, link) // Передаём значения из формы
     .then((dataCard) => {
-      const newCard = {
-        name: dataCard.name,
-        link: dataCard.link,
-        likes: dataCard.likes,
-        owner: dataCard.owner,
-      };
-
-      const cardItem = createCard(newCard, globalUserData._id, deleteCard, clickImage);
+      const cardItem = createCard(dataCard, globalUserData._id, handleDeleteCard, clickImage);
       document.querySelector('.places__list').prepend(cardItem);
 
       formCards.reset(); // Очищаем форму

@@ -5,10 +5,12 @@ const config = {
     'Content-Type': 'application/json',
   },
 };
-
-function showError() {
-  console.log('Не удалось загрузить данные');
-}
+function handleResponse(res) {
+  if (res.ok) {
+    return res.json();
+  }
+  return Promise.reject(`Ошибка: ${res.status}`);
+};
 
 // Загрузка информации о пользователе
 function loadInfoUser() {
@@ -18,16 +20,7 @@ function loadInfoUser() {
       authorization: `${config.headers.authorization}`,
     },
   })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .then((userData) => {
-      return userData;
-    })
-    .catch(showError);
+    .then(handleResponse);
 }
 
 // Загрузка карточек с сервера
@@ -38,16 +31,7 @@ function loadCards() {
       authorization: `${config.headers.authorization}`,
     },
   })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .then((cardsData) => {
-      return cardsData;
-    })
-    .catch(showError);
+    .then(handleResponse);
 }
 
 // Запрос на обновление данных профиля
@@ -60,16 +44,7 @@ function updateInfoProfile(nameProfile, aboutProfile) {
       about: aboutProfile,
     }),
   })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .then((infoProfile) => {
-      return infoProfile;
-    })
-    .catch(showError);
+    .then(handleResponse);
 }
 
 // Запрос на добавление карточки
@@ -82,16 +57,7 @@ function addCard(cardName, link) {
       link: link,
     }),
   })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .then((dataCard) => {
-      return dataCard;
-    })
-    .catch(showError);
+    .then(handleResponse);
 }
 
 // Запрос на удаление карточки
@@ -100,16 +66,7 @@ function removeCard(cardId) {
     method: 'DELETE',
     headers: config.headers,
   })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .then((newCard) => {
-      return newCard;
-    })
-    .catch(showError);
+    .then(handleResponse);
 }
 
 // Запрос на постановку лайка
@@ -118,16 +75,7 @@ function likeCard(cardId) {
     method: 'PUT',
     headers: config.headers,
   })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .then((updatedCard) => {
-      return updatedCard;
-    })
-    .catch(showError);
+    .then(handleResponse);
 }
 
 // Запрос на снятие лайка
@@ -136,16 +84,7 @@ function unlikeCard(cardId) {
     method: 'DELETE',
     headers: config.headers,
   })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .then((updatedCard) => {
-      return updatedCard;
-    })
-    .catch(showError);
+    .then(handleResponse);
 }
 
 // Запрос на обновление аватара пользователя
@@ -157,16 +96,7 @@ function updateAvatar(avatar) {
       avatar: avatar,
     }),
   })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .then((updatedUser) => {
-      return updatedUser;
-    })
-    .catch(showError);
+    .then(handleResponse);
 }
 
-export { loadInfoUser, loadCards, showError, updateInfoProfile, addCard, removeCard, likeCard, unlikeCard, updateAvatar };
+export { loadInfoUser, loadCards, updateInfoProfile, addCard, removeCard, likeCard, unlikeCard, updateAvatar };
